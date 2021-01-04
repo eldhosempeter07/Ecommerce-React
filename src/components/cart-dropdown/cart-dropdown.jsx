@@ -4,14 +4,14 @@ import { CustomButton } from '../custom-button/custom-button.component'
 import './cart-dropdown.styles.scss'
 
 import React from 'react'
+import { CartItem } from '../cart-item/cart-item.component';
 
 const CartDropdown = ({cartItems}) => {
-    console.log("cart",cartItems);
     return (
         <div className="cart-dropdown">
             <div className='cart-items'>
-
-                    <p>asd</p>
+                {cartItems.map(cartItem => 
+                    <CartItem key={cartItem.id} item ={cartItem} />)}
 
             </div>
                 <CustomButton>GO TO CHECKOUT</CustomButton>   
@@ -19,7 +19,7 @@ const CartDropdown = ({cartItems}) => {
     );
 }
 
-const mapStateToProps = ({cart:cartItems}) =>({
+const mapStateToProps = ({cart:{cartItems}}) =>({
     cartItems
 })
 
