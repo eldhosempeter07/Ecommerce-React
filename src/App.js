@@ -32,7 +32,7 @@ export class App extends Component {
       }
     else{
       setCurrentUser(userAuth);
-    }      
+    }     
     });
   }
 
@@ -68,7 +68,7 @@ export class App extends Component {
 }
 
 const mapStateToProps = createStructuredSelector({
-    currentUser: selectCurrentUser
+    currentUser: selectCurrentUser,
 })
 
 const mapDispatchToProps = dispatch => ({

@@ -10,7 +10,9 @@ var config = {
     messagingSenderId: "825841085142",
     appId: "1:825841085142:web:801f3adbaf0367e547b777"
   };
-
+  
+  firebase.initializeApp(config)
+  
   export const createUserProfileDocument = async (userAuth,additionalData)=>{
     if(!userAuth) return;
 
@@ -36,16 +38,44 @@ var config = {
     return userRef;
   }
 
+  export const addCollectionAndDocument = (collectionKey,objectToAdd) =>{
+      const collectionRef = firestore.collection(collectionKey)
+      
+      const batch = firestore.batch();
+      objectToAdd.forEach(obj => {
+        const newDocRef = collectionRef.doc();
+        batch.set(newDocRef,obj)
+      });
+      batch.commit();
+  }
+
+  export const convertCollectionsSnapshotToMap = (collections) =>{
+      const transformedCollection = collections.docs.map(doc=>{
+        const {title,items} = doc.data()
+        return{
+          routeName:encodeURI(title.toLowerCase()),
+          id:doc.id,
+          title,
+          items
+        }
+        
+      })
+      return transformedCollection.reduce((accumulator,collections)=>{
+        accumulator[collections.title.toLowerCase()] = collections
+        return accumulator;
+      },{})
+  }
+
+
   
 
-  firebase.initializeApp(config)
 
-  export const auth = firebase.auth();
-  export const firestore = firebase.firestore();
+export const auth = firebase.auth();
+export const firestore = firebase.firestore();
 
-  const provider = new firebase.auth.GoogleAuthProvider();
+const provider = new firebase.auth.GoogleAuthProvider();
 
-  provider.setCustomParameters({prompt:'select_account'})
+provider.setCustomParameters({prompt:'select_account'})
 
-  export const signInWithGoogle = ()=>auth.signInWithPopup(provider);
-  export default firebase;
+export const signInWithGoogle = ()=>auth.signInWithPopup(provider);
+export default firebase;
